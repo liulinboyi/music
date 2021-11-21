@@ -209,25 +209,49 @@ export default {
       if (au && !store.state.playing/*正在播放则不进入此分支*/) {
         // Once the metadata has been loaded, display the duration in the console
         au.addEventListener('loadedmetadata', (e) => {
-          // Obtain the duration in seconds of the audio file (with milliseconds as well, a float value)
-          let duration = e.target.duration;
-          console.log("音频时长", e.target, duration) // 单位秒
-          // store.commit("setcurrentSongDuration", duration)
-          let temp = { ...currentSong.value }
-          temp.duration = duration
-          store.commit("setcurrentSong", temp)
+          // 加载音频资源后，将progressChanging置为true，这会导致，进度条触发事件回调函数失效
+          progressChanging = true
+          const audioEl = audioRef.value
+          audioEl.muted = true // 先静音
+          setTimeout(() => {
+            // 小米浏览器的Bug,导致必须等待500ms才能获取音频时长，其实这个最好在后端就能获取音频时长
+            // 但是即使在后端获取时长，为了做进度本地保存与恢复也得做特殊处理，来解决小米浏览器的Bug引起的问题
+            // Obtain the duration in seconds of the audio file (with milliseconds as well, a float value)
+            let duration = e.target.duration;
+            console.log("音频时长", e.target, duration) // 单位秒
+            // store.commit("setcurrentSongDuration", duration)
+            let temp = { ...currentSong.value }
+            temp.duration = duration
+            store.commit("setcurrentSong", temp)
+
+            setTimeout(() => {
+              progressChanging = false
+              audioEl.muted = false // 开音效
+              let cache = storage.session.get(CURRENT_SONG)
+              // debugger
+              if (cache && cache.url === currentSong.value.url) { // 如果缓存的音频和新的音频相同则进入此分支
+                const audioEl = audioRef.value
+                if (cache) { // 如果有缓存
+                  console.log("cache", cache)
+                  // currentTime是一个可读兼可写的属性，用来设置或获取当前已经播放的时长，单位是秒。
+                  audioEl.currentTime = cache.currentTime
+                }
+              }
+            })
+          }, 500)
+
         }, false);
 
-        au.addEventListener("timeupdate", (e) => {
-          if (currentSong.value.duration) {
-            return
-          }
-          let duration = e.target.duration
-          console.log("timeupdate", duration)
-          let temp = { ...currentSong.value }
-          temp.duration = duration
-          store.commit("setcurrentSong", temp)
-        })
+        // au.addEventListener("timeupdate", (e) => {
+        //   if (currentSong.value.duration) {
+        //     return
+        //   }
+        //   let duration = e.target.duration
+        //   console.log("timeupdate", duration)
+        //   let temp = { ...currentSong.value }
+        //   temp.duration = duration
+        //   store.commit("setcurrentSong", temp)
+        // })
       }
 
     })
@@ -274,14 +298,6 @@ export default {
       if (!newSong.id || !newSong.url) {
         return
       }
-      let cache = storage.session.get(CURRENT_SONG)
-      if (cache && cache.url === newSong.url) { // 如果缓存的进度和新的进度不同则进入此分支
-        const audioEl = audioRef.value
-        if (cache) { // 如果有缓存
-          // currentTime是一个可读兼可写的属性，用来设置或获取当前已经播放的时长，单位是秒。
-          audioEl.currentTime = cache.currentTime
-        }
-      }
 
       if (oldSong.url !== newSong.url) {
         // 获取缓存中的播放进度
@@ -325,11 +341,17 @@ export default {
       if (!songReady.value) {
         return
       }
+      console.log("togglePlay")
       store.commit('setPlayingState', !playing.value)
     }
 
     function pause() {
-      store.commit('setPlayingState', false)
+      // 小米浏览器音频播放也会执行暂停回调，真奇葩！
+      if (!playing.value) { // 如果playing此时为false则退出
+        return
+      }
+      console.log("pause")
+      // store.commit('setPlayingState', false)
     }
 
     function prev() {
@@ -397,6 +419,7 @@ export default {
         // 缓存播放进度
         let temp = { ...currentSong.value }
         temp.currentTime = currentTime.value
+        // console.log(temp)
         // store.commit("setcurrentSong", temp)
 
         storage.session.set(CURRENT_SONG, temp)
@@ -411,10 +434,11 @@ export default {
     }
 
     function onProgressChanged(progress) {
-      progressChanging = false
       audioRef.value.currentTime = currentTime.value = currentSong.value.duration * progress
+      console.log("onProgressChanged", playing.value)
       if (!playing.value) {
         store.commit('setPlayingState', true)
+        progressChanging = false
       }
       playLyric()
     }

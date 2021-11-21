@@ -100,6 +100,7 @@
         position: absolute;
         height: 100%;
         background: $color-theme;
+        transition: all .5s ease;
       }
       .progress-btn-wrapper {
         position: absolute;
@@ -107,6 +108,7 @@
         top: -13px;
         width: 30px;
         height: 30px;
+        transition: all .5s ease;
         .progress-btn {
           position: relative;
           top: 7px;
