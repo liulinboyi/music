@@ -5,7 +5,7 @@
  Source Server Type    : MySQL
  Source Server Version : 80021
  Source Host           : 47.94.160.237:3306
- Source Schema         : app
+ Source Schema         : podcast
 
  Target Server Type    : MySQL
  Target Server Version : 80021
@@ -14,9 +14,9 @@
  Date: 26/10/2021 17:35:59
 */
 
-create database if not exists app default character set utf8 collate utf8_general_ci;
+create database if not exists podcast default character set utf8 collate utf8_general_ci;
 
-use app;
+use podcast;
 
 SET NAMES utf8mb4;
 SET FOREIGN_KEY_CHECKS = 0;
@@ -146,7 +146,7 @@ CREATE TABLE `t_user` (
 -- ----------------------------
 BEGIN;
 INSERT INTO `t_user` VALUES (1, b'1', b'1', b'1', b'1', '$2a$10$g0LlMVrfUlmRxYKUPpzsT.Ww6pdSJoHWrFdGJqd9sF96YRbqS78zG', 1, 'admin', NULL);
-INSERT INTO `t_user` VALUES (2, b'1', b'1', b'1', b'1', '$2a$10$93sUDzzbjGCBOxi/WdeNYuuF.oaEjZ9ygip3HoMOEiRO/ww7KkoE.', 1, 'lambert', NULL);
+INSERT INTO `t_user` VALUES (2, b'1', b'1', b'1', b'1', '$2a$10$93sUDzzbjGCBOxi/WdeNYuuF.oaEjZ9ygip3HoMOEiRO/ww7KkoE.', 1, 'podcasts', NULL);
 INSERT INTO `t_user` VALUES (3, b'1', b'1', b'1', b'1', '$2a$10$9284hgIkXcBVjYQA1Csqx..pcfLh5KKfkID9UpjoDQ3fNf0kfY14K', 1, 'liulinboyi', NULL);
 INSERT INTO `t_user` VALUES (4, b'1', b'1', b'1', b'1', '$2a$10$9MOQY1pMCGKsOFnIpaAZm.fqhgxOrXFlqXdx2XWX9lnMWRalmjbgO', 1, 'liziheng', NULL);
 COMMIT;
