@@ -101,6 +101,18 @@ public class Message {
         out.flush();
         out.close();
     }
+
+    @Override
+    public String toString() {
+        return "Message{" +
+                "success=" + success +
+                ", status=" + status +
+                ", message='" + message + '\'' +
+                ", data='" + data + '\'' +
+                ", listData=" + listData +
+                ", objectData=" + objectData +
+                '}';
+    }
 }
 //200 OK - [GET]：服务器成功返回用户请求的数据，该操作是幂等的（Idempotent）。
 //201 CREATED - [POST/PUT/PATCH]：用户新建或修改数据成功。

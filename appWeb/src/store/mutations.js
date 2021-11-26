@@ -43,6 +43,10 @@ const mutations = {
   },
   setPlayHistory(state, songs) {
     state.playHistory = songs
+  },
+  // 设置评论
+  setComment(state, comment) {
+    state.comment = comment;
   }
 }
 

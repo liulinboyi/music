@@ -24,7 +24,8 @@ export default function useLyric({ songReady, currentTime }) {
     pureMusicLyric.value = ''
     playingLyric.value = ''
 
-    const lyric = await getLyric(newSong)
+    // const lyric = await getLyric(newSong)
+    const lyric = '[00:00:00]该播客暂时无法获取口播'
     store.commit('addSongLyric', {
       song: newSong,
       lyric

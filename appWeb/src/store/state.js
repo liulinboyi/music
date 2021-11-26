@@ -10,7 +10,8 @@ const state = {
   fullScreen: false,
   favoriteList: [],
   searchHistory: load(SEARCH_KEY),
-  playHistory: []
+  playHistory: [],
+  comment: [], // 评论
 }
 
 export default state

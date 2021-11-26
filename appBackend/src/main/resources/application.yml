@@ -8,6 +8,8 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.MySQL8Dialect
+        jdbc:
+          time_zone: Asia/Shanghai
   #    generate-ddl: true
   security:
   #    user:
@@ -21,7 +23,7 @@ spring:
       enabled: true
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-#    url: jdbc:mysql://47.94.160.237:3306/app?characterEncoding=utf8&useSSL=false&serverTimezone=Asia/Shanghai
+    #    url: jdbc:mysql://47.94.160.237:3306/app?characterEncoding=utf8&useSSL=false&serverTimezone=Asia/Shanghai
     url: jdbc:mysql://localhost:3306/podcast?characterEncoding=utf8&useSSL=false&serverTimezone=Asia/Shanghai
     #    url: jdbc:mysql://47.94.160.237:3306/app?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
     username: root

@@ -12,10 +12,16 @@ const SingerDetail = () => import('@/views/singer-detail' /* webpackChunkName: "
 const Album = () => import('@/views/album' /* webpackChunkName: "album" */ )
 const TopDetail = () => import('@/views/top-detail' /* webpackChunkName: "top-detail" */ )
 const UserCenter = () => import('@/views/user-center' /* webpackChunkName: "user-center" */ )
+const Comment = () => import("@/views/comment" /*webpackChunkName: "comment"*/ )
 
 const routes = [{
     path: '/',
     redirect: '/recommend'
+  },
+  {
+    name: "comment",
+    path: "/comment",
+    component: Comment,
   },
   {
     path: '/recommend',
@@ -62,7 +68,15 @@ const router = createRouter({
   routes
 })
 
-router.beforeResolve(async to => {
+router.beforeResolve(async (to, from) => {
+
+  // console.log(to, from)
+  if (to.name == "comment") {
+    if (store.state.fullScreen) {
+      store.commit('setFullScreen', false)
+    }
+    return true
+  }
 
   if (store.state.fullScreen) {
     store.commit('setFullScreen', false)

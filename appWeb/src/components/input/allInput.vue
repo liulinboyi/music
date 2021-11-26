@@ -1,7 +1,7 @@
 <template>
     <div class="all-input-wrapper">
         <input class="account" v-model="account" placeholder="请输入账号" />
-        <input class="password" v-model="password" placeholder="请输入密码" />
+        <input class="password" type="password" v-model="password" placeholder="请输入密码" />
     </div>
 </template>
 <script>

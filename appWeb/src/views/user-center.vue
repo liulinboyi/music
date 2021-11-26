@@ -10,6 +10,7 @@
             <div class="avator" :style="avatorStyle"></div>
             <div class="user-name">{{ user.data.username }}已登录</div>
           </div>
+          <div @click="logout" class="logout">退出登录</div>
         </scroll>
       </div>
     </div>
@@ -53,7 +54,7 @@
                 />
                 <input v-model="codes" class="code" placeholder="请输入验证码" />
               </div>
-              <button class="input-btn">注册</button>
+              <button @click="registor" class="input-btn">注册</button>
             </div>
           </div>
         </scroll>
@@ -124,6 +125,22 @@ export default {
     // ...mapState(["favoriteList", "playHistory"]),
   },
   methods: {
+    async logout() {
+      let res = window.confirm("确定退出？")
+      if (res) {
+        console.log("退出成功")
+        // logout
+        let user = await axios({
+          method: "get",
+          url: `${BASR_URL}/logout`,
+          withCredentials: true,
+        })
+        console.log(user)
+        if (user.data.success) {
+          this.loged = false
+        }
+      }
+    },
     async checkUser() {
       let user = await axios({
         method: "get",
@@ -139,6 +156,41 @@ export default {
     },
     back() {
       this.$router.back();
+    },
+    async registor() {
+      if (this.registerData.account && this.registerData.password && this.codes) {
+
+        var bodyFormData = new FormData();
+        bodyFormData.append('username', this.registerData.account);
+        bodyFormData.append('password', this.registerData.password);
+        bodyFormData.append('imageCode', this.codes);
+        console.log(bodyFormData)
+        try {
+          let res = await axios({
+            method: "post",
+            url: `${BASR_URL}/register`,
+            data: bodyFormData,
+            headers: { "Content-Type": "multipart/form-data", },
+            withCredentials: true,
+          })
+          console.log(res)
+          if (res.data.success) {
+            this.currentIndex = 0
+            alert("注册成功！")
+            // this.$router.replace("/");
+            // await this.checkUser()
+            this.loginData.account = ""
+            this.loginData.password = ""
+            this.codes = ""
+          } else {
+            window.alert(res.data.Message)
+          }
+        } catch (error) {
+          console.log(error)
+        }
+      } else {
+        alert("请将信息输入完整！")
+      }
     },
     async login() {
       if (this.loginData.account && this.loginData.password && this.codes) {
@@ -157,9 +209,14 @@ export default {
             withCredentials: true,
           })
           console.log(res)
-          if (res.data.code === 200) {
+          if (res.data.success) {
             // this.$router.replace("/");
             await this.checkUser()
+            this.loginData.account = ""
+            this.loginData.password = ""
+            this.codes = ""
+          } else {
+            window.alert(res.data.Message)
           }
         } catch (error) {
           console.log(error)
@@ -228,6 +285,12 @@ export default {
       height: 100%;
       overflow: hidden;
 
+      .logout {
+        display: flex;
+        align-items: center;
+        padding: 0 20px 20px 20px;
+        justify-content: center;
+      }
       .user-profile {
         display: flex;
         align-items: center;

@@ -16,7 +16,7 @@ public interface MediaMapper extends JpaRepository<Media, Long> {
 //    void update(Long id, String title, String classify);
     @Query(value = "update t_media u set u.title=:#{#media.title},u.classifyId=:#{#media.classifyId} where u.id=:#{#media.id}")
     void update(Media media);
-
+    
     @Query(value = "select u from t_media u where u.userId=:id")
     List<Media> findAllByUserId(Long id);
 

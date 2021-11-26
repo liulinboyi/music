@@ -91,7 +91,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers().hasRole("assessor")
                 .antMatchers("/personalColumn/update", "/personalColumn/delete", "/personalColumn/create", "/identity/detail", "/identity/update", "/file/upload", "/file/download", "/file/update", "/file/deleteById", "/file/updateMedia", "/file/findAllMediaByUserId", "/personalColumn/create", "/personalColumn/delete", "/personalColumn/update", "/file/uploadImg", "/myself").hasRole("user")
                 .antMatchers("/personalColumn/findAll", "/personalColumn/findAllByUserId", "/personalColumn/findById", "/identity/create", "/classify/findAll", "/file/video/player", "/file/findMediaById", "/personalColumn/findAll", "/personalColumn/findAllByUserId", "/personalColumn/findById", "/personalColumn/findAllByClassifyId", "/media/getMediaByArray").permitAll()
-                .antMatchers("/code/image"/*验证码*/, "/personalColumn/findDetailById").permitAll()
+                .antMatchers("/code/image"/*验证码*/, "/personalColumn/findDetailById", "/comment/getComment","/register").permitAll()
                 .anyRequest().authenticated() //尚未匹配的任何URL都要求用户进行身份验证
 
                 .and()

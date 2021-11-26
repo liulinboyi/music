@@ -117,6 +117,29 @@ public class UserController {
         message.returnJson(resp);
     }
 
+    @PostMapping("/register")
+    public void register(@RequestParam("username") String username, @RequestParam("password") String password, @RequestParam("imageCode") String imageCode, HttpServletResponse resp) throws IOException {
+        User nowUser = null;
+        Message message = null;
+        try {
+            // 登陆状态不可以创建新用户
+            Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            nowUser = (User) principal;
+            message = new Message(false, 400, "请先退出登录，在创建新用户", "");
+        } catch (Exception e) {
+            // 创建新用户
+            if (username != null && password != null && imageCode != null) {
+                User user = new User();
+                user.setUsername(username);
+                user.setPassword(password);
+                message = userService.create(user, nowUser);
+            } else {
+                message = new Message(false, 400, "请填写完整信息！", "");
+            }
+        }
+        message.returnJson(resp);
+    }
+
     /**
      * showdoc
      *

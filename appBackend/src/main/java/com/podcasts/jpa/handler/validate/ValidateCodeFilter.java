@@ -32,6 +32,7 @@ public class ValidateCodeFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, FilterChain filterChain) throws ServletException, IOException {
         if (StringUtils.equalsIgnoreCase("/login", httpServletRequest.getRequestURI())
+                || StringUtils.equalsIgnoreCase("/register", httpServletRequest.getRequestURI())
                 && StringUtils.equalsIgnoreCase(httpServletRequest.getMethod(), "post")) {
             try {
                 validateCode(new ServletWebRequest(httpServletRequest));

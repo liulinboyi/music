@@ -3,8 +3,11 @@ package com.podcasts.jpa;
 import com.podcasts.jpa.mapper.ClassifyMapper;
 import com.podcasts.jpa.mapper.MediaMapper;
 import com.podcasts.jpa.mapper.RoleMapper;
+import com.podcasts.jpa.pojo.Comment;
 import com.podcasts.jpa.pojo.User;
+import com.podcasts.jpa.service.CommentService;
 import com.podcasts.jpa.service.UserService;
+import com.podcasts.jpa.util.Message;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -23,6 +26,8 @@ class JpaApplicationTests {
     UserService userService;
     @Autowired
     MediaMapper mediaMapper;
+    @Autowired
+    CommentService commentService;
 
     @Test
     void mediaMapper() {
@@ -57,5 +62,46 @@ class JpaApplicationTests {
         user.setPower(1L);
 
         userService.save(user, user);
+    }
+
+    @Test
+    void addComment() {
+//        Comment comment = new Comment();
+//        comment.setUserId(3L);
+//        comment.setParentId(10L);
+//        comment.setType("media");
+//        comment.setContent("哈哈哈哈哈2");
+//        Message res = commentService.addComment(comment);
+
+
+//        Comment comment = new Comment();
+//        comment.setUserId(3L);
+//        comment.setParentId(4L);
+//        comment.setType("comment");
+//        comment.setContent("我也哈哈哈哈哈1");
+//        Message res = commentService.addComment(comment);
+
+        Comment comment = new Comment();
+        comment.setUserId(1L);
+        comment.setParentId(9L);
+        comment.setType("comment");
+        comment.setContent("我也也也哈哈哈哈哈1");
+        Message res = commentService.addComment(comment);
+        System.out.println(res);
+    }
+
+    @Test
+    void getAllComment() {
+        Long parentId = 10L;
+        String type = "media";
+        Message res = commentService.findAllComment(parentId, type);
+        System.out.println(res);
+    }
+
+    @Test
+    void deleteComment() {
+        Long id = 3L;
+        Message res = commentService.delete(id);
+        System.out.println(res);
     }
 }

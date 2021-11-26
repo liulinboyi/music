@@ -4,6 +4,7 @@ import lombok.Data;
 import org.hibernate.annotations.Proxy;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Data
 @Entity(name = "t_media")
@@ -25,6 +26,9 @@ public class Media {
     private String username; // 创建者的名字
     private String fileName; // 文件名称
     private boolean isShow; // 媒体是否审核通过
+    //    private String comments; // *重要 所有评论，以字符串形式存储，以逗号隔开
+    @Transient
+    private List<Comment> allComments;
 //                // 获取文件后缀
 //                String line = path;
 //                String pattern = "(?:FileStorage/.*/)(.*\\..*$)";
@@ -62,5 +66,109 @@ public class Media {
 
     public Media() {
 
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public Long getClassifyId() {
+        return classifyId;
+    }
+
+    public void setClassifyId(Long classifyId) {
+        this.classifyId = classifyId;
+    }
+
+    public String getImg() {
+        return img;
+    }
+
+    public void setImg(String img) {
+        this.img = img;
+    }
+
+    public String getPath() {
+        return path;
+    }
+
+    public void setPath(String path) {
+        this.path = path;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public Long getTime() {
+        return time;
+    }
+
+    public void setTime(Long time) {
+        this.time = time;
+    }
+
+    public Long getSize() {
+        return size;
+    }
+
+    public void setSize(Long size) {
+        this.size = size;
+    }
+
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getFileName() {
+        return fileName;
+    }
+
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
+    }
+
+    public boolean isShow() {
+        return isShow;
+    }
+
+    public void setShow(boolean show) {
+        isShow = show;
+    }
+
+    public List<Comment> getAllComments() {
+        return allComments;
+    }
+
+    public void setAllComments(List<Comment> allComments) {
+        this.allComments = allComments;
     }
 }

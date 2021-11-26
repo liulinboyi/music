@@ -97,7 +97,7 @@
               <div @click="showComment">评论</div>
             </div>
             <div class="icon downliad">
-              <div @click="download(currentSong.path, currentSong.path)">下载</div>
+              <div>下载</div>
             </div>
           </div>
         </div>
@@ -129,7 +129,7 @@ import ProgressBar from './progress-bar'
 import Scroll from '@/components/base/scroll/scroll'
 import MiniPlayer from './mini-player'
 import { formatTime } from '@/assets/js/util'
-import { PLAY_MODE, CURRENT_SONG, ALBUM_KEY, RESOURCE_BASE_URL, BASR_URL } from '@/assets/js/constant'
+import { PLAY_MODE, CURRENT_SONG, ALBUM_KEY, RESOURCE_BASE_URL } from '@/assets/js/constant'
 import storage from 'good-storage'
 import { onBeforeRouteLeave, onBeforeRouteUpdate, useRouter, useRoute } from 'vue-router'
 
@@ -235,20 +235,20 @@ export default {
             temp.duration = duration
             store.commit("setcurrentSong", temp)
 
-            setTimeout(() => {
-              progressChanging = false
-              audioEl.muted = false // 开音效
-              let cache = storage.session.get(CURRENT_SONG)
-              // debugger
-              if (cache && cache.url === currentSong.value.url) { // 如果缓存的音频和新的音频相同则进入此分支
-                const audioEl = audioRef.value
-                if (cache) { // 如果有缓存
-                  console.log("cache", cache)
-                  // currentTime是一个可读兼可写的属性，用来设置或获取当前已经播放的时长，单位是秒。
-                  audioEl.currentTime = cache.currentTime
-                }
-              }
-            })
+            // setTimeout(() => {
+            //   progressChanging = false
+            //   audioEl.muted = false // 开音效
+            //   let cache = storage.session.get(CURRENT_SONG)
+            //   // debugger
+            //   if (cache && cache.url === currentSong.value.url) { // 如果缓存的音频和新的音频相同则进入此分支
+            //     const audioEl = audioRef.value
+            //     if (cache) { // 如果有缓存
+            //       console.log("cache", cache)
+            //       // currentTime是一个可读兼可写的属性，用来设置或获取当前已经播放的时长，单位是秒。
+            //       audioEl.currentTime = cache.currentTime
+            //     }
+            //   }
+            // })
           }, 500)
 
         }, false);
@@ -310,6 +310,21 @@ export default {
         return
       }
 
+      let cache = storage.session.get(CURRENT_SONG)
+      if (cache && cache.url === newSong.url) { // 如果缓存的音频和新的音频相同则进入此分支
+        setTimeout(() => {
+          const audioEl = audioRef.value
+          progressChanging = false
+          audioEl.muted = false // 开音效
+          // debugger
+          console.log("cache", cache)
+          // currentTime是一个可读兼可写的属性，用来设置或获取当前已经播放的时长，单位是秒。
+          audioEl.currentTime = cache.currentTime
+          currentTime.value = cache.currentTime
+        })
+      }
+
+
       if (oldSong.url !== newSong.url) {
         // 获取缓存中的播放进度
         currentTime.value = 0
@@ -319,12 +334,6 @@ export default {
         audioEl.src = newSong.url
         audioEl.play()
         store.commit('setPlayingState', true)
-      } else {
-        if (oldSong.duration && !newSong.duration) { // 旧数据有duration，新数据没有duration
-          let temp = { ...currentSong.value }
-          temp.duration = oldSong.duration
-          store.commit("setcurrentSong", temp)
-        }
       }
     })
 
@@ -351,66 +360,6 @@ export default {
 
     // methods
 
-    /**
-   
-   * 下载文件
-   
-   * @param {String} path - 下载地址/下载请求地址。
-   
-   * @param {String} name - 下载文件的名字（考虑到兼容性问题，最好加上后缀名）
-   
-   */
-    function download(path, name) {
-      // debugger
-
-      let ma = name.match(/[\s\S]+\/([\s\S]+)$/)
-      if (ma) {
-        name = ma[1]
-      }
-      path = `${BASR_URL}/file/download?fileName=${name}&path=${path}`
-
-
-      const xhr = new XMLHttpRequest();
-
-      xhr.open('get', path);
-
-      xhr.responseType = 'blob';
-
-      xhr.send();
-
-      xhr.onload = function () {
-
-        if (this.status === 200 || this.status === 304) {
-
-          const fileReader = new FileReader();
-
-          fileReader.readAsDataURL(this.response);
-
-          fileReader.onload = function () {
-
-            const a = document.createElement('a');
-
-            a.style.display = 'none';
-
-            a.href = this.result;
-
-            a.download = name;
-
-            document.body.appendChild(a);
-
-            a.click();
-
-            document.body.removeChild(a);
-
-          };
-
-        }
-
-      };
-
-
-
-    }
     async function showComment() {
       console.log("showComment")
       // store.commit("setComment", [1, 2, 3])
@@ -552,7 +501,6 @@ export default {
       disableCls,
       progress,
       showComment,
-      download,
       goBack,
       togglePlay,
       pause,

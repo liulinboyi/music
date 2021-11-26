@@ -215,7 +215,7 @@ public class FileStorageController {
     @GetMapping("/download")
     public void download(@RequestParam(name = "fileName") String fileName, @RequestParam(name = "path") String path, HttpServletResponse resp) throws IOException {
         Message message = fileStorageService.download(fileName, path, resp);
-//        message.returnJson(resp);
+        message.returnJson(resp);
     }
 
     /**
