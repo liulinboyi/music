@@ -47,7 +47,7 @@ import { getHotKeys } from '@/service/search'
 import { useStore } from 'vuex'
 import { useRouter } from 'vue-router'
 import storage from 'good-storage'
-import { SINGER_KEY } from '@/assets/js/constant'
+import { SINGER_KEY, ALBUM_KEY } from '@/assets/js/constant'
 import useSearchHistory from '@/components/search/use-search-history'
 
 export default {
@@ -97,11 +97,17 @@ export default {
       store.dispatch('addSong', song)
     }
 
+    function cacheAlbum(album) {
+      storage.session.set(ALBUM_KEY, album)
+    }
+
     // 修改
     function selectSinger(singer) {
+      // debugger
       saveSearch(query.value)
       selectedSinger.value = singer
       cacheSinger(singer)
+      cacheAlbum(singer)
 
       router.push({
         path: `/search/${singer.id}`

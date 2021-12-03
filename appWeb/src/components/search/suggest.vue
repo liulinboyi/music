@@ -95,7 +95,6 @@ export default {
       // singer.value = result.singer
       // hasMore.value = result.hasMore
 
-      debugger
       let user = await axios({
         method: "get",
         url: `${BASR_URL}/personalColumn/findByName?name=${props.query}`,
